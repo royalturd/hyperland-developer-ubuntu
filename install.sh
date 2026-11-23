@@ -1,11 +1,17 @@
 #!/bin/bash
+set -e
 
-echo "🔄 Removing any existing local copy..."
-rm -rf hyperland-developer-ubuntu
+REPO_URL="https://github.com/grassiricardo/hyperland-developer-ubuntu.git"
+DIR="hyperland-developer-ubuntu"
 
-echo "🔄 Cloning Hyperland setup repo..."
-git clone https://github.com/grassiricardo/hyperland-developer-ubuntu.git
-cd hyperland-developer-ubuntu
+if [ -d "$DIR/.git" ]; then
+  echo "🔄 Existing copy found, updating it..."
+  git -C "$DIR" pull --ff-only
+else
+  echo "🔄 Cloning Hyprland setup repo..."
+  git clone "$REPO_URL" "$DIR"
+fi
+cd "$DIR"
 
 echo "🔧 Starting full setup..."
 chmod +x setup.sh
