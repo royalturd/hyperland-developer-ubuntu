@@ -17,11 +17,12 @@ Setup scripts that install and configure a **Hyprland** environment on **Ubuntu 
 
 ### 🎨 Theming and UI
 
-Writes GTK3 and GTK4 `settings.ini` for:
+Writes GTK3 and GTK4 `settings.ini` with the same look as the existing GNOME setup:
 
-- **GTK Theme:** Catppuccin Mocha – Blue Dark
-- **Icon Pack:** Papirus
-- **Font:** JetBrains Mono Nerd Font
+- **GTK Theme:** material-gnome-theme (dark)
+- **Icon Pack:** Yaru-prussiangreen-dark
+- **Font:** Ubuntu Nerd Font 11
+- **Cursor:** DMZ-Black, size 24
 
 These must already be installed; the scripts do not install them.
 
