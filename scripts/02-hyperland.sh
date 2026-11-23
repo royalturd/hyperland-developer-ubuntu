@@ -1,16 +1,14 @@
 #!/bin/bash
-echo "🌌 Installing Hyperland..."
-git clone --recursive https://github.com/hyprwm/Hyprland.git hyperland
-cd hyperland
-make all
-sudo make install
-cd ..
-echo "🧾 Creating Hyperland session..."
-sudo tee /usr/share/wayland-sessions/hyperland.desktop > /dev/null <<EOF
-[Desktop Entry]
-Name=Hyperland
-Exec=Hyperland
-Type=Application
-EOF
+set -e
+echo "🌌 Installing Hyprland from apt..."
+sudo apt install -y hyprland xdg-desktop-portal-hyprland
+
+# The package ships its own login session (/usr/share/wayland-sessions/hyprland.desktop).
+
+echo "🧾 Setting up Hyprland config..."
 mkdir -p ~/.config/hypr
-cp -r hyperland/example/hypr/* ~/.config/hypr/
+if [ ! -f ~/.config/hypr/hyprland.conf ]; then
+  cp /usr/share/hypr/hyprland.conf ~/.config/hypr/hyprland.conf
+else
+  echo "ℹ️  ~/.config/hypr/hyprland.conf already exists, leaving it untouched."
+fi
