@@ -17,7 +17,7 @@ sudo apt install -y \
 
 # Apps and shell tools used by the config and keybinds
 sudo apt install -y \
-  alacritty kitty nautilus rofi fuzzel wlogout cava btop \
+  alacritty kitty nautilus rofi fuzzel wlogout cava btop easyeffects \
   fish zsh starship eza kdialog
 
 # Fonts, icons and Qt theme

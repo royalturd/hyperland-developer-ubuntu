@@ -42,8 +42,10 @@ rsync -a "$HOME/.local/state/quickshell/user/generated" "$DOTS/state/quickshell/
 
 # Shell icon and the FluentWinUI3 stub QML module (Ubuntu's Qt lacks it)
 mkdir -p "$DOTS/local/share/icons" "$DOTS/local/lib/qt6/qml/QtQuick/Controls"
-cp "$HOME/.local/share/icons/illogical-impulse.svg" "$DOTS/local/share/icons/"
-rsync -a "$HOME/.local/lib/qt6/qml/QtQuick/Controls/FluentWinUI3" "$DOTS/local/lib/qt6/qml/QtQuick/Controls/"
+ICON="$HOME/.local/share/icons/illogical-impulse.svg"
+STUB="$HOME/.local/lib/qt6/qml/QtQuick/Controls/FluentWinUI3"
+if [ -f "$ICON" ]; then cp "$ICON" "$DOTS/local/share/icons/"; else echo "⚠️  $ICON not found, skipped"; fi
+if [ -d "$STUB" ]; then rsync -a "$STUB" "$DOTS/local/lib/qt6/qml/QtQuick/Controls/"; else echo "⚠️  $STUB not found, skipped"; fi
 
 # Wallpapers (desktop + lock screen)
 mkdir -p "$DOTS/wallpapers"
@@ -57,7 +59,20 @@ if [ -x "$HOME/.local/bin/uv" ] && [ -x "$VENV/bin/python" ]; then
   "$HOME/.local/bin/uv" pip freeze --python "$VENV/bin/python" 2>/dev/null > "$DOTS/requirements.txt"
 fi
 
-# Replace the absolute home path with a placeholder
-grep -rlI --null -- "$HOME" "$DOTS" | xargs -0 -r sed -i "s|$HOME|@HOME@|g"
+# Replace the absolute home path with a placeholder. The path is escaped so
+# it matches literally, and must end at a path boundary, so /home/user2 is
+# left alone when $HOME is /home/user.
+HOME_RE=$(printf '%s' "$HOME" | sed 's/[][\.*^$|/]/\\&/g')
+grep -rlIF --null -- "$HOME" "$DOTS" \
+  | xargs -0 -r sed -E -i "s/${HOME_RE}([^A-Za-z0-9._-]|\$)/@HOME@\1/g"
+
+# Refuse to finish if anything that looks like a secret was captured
+SECRET_RE='(ghp_|github_pat_|gho_|glpat-|xox[abp]-|sk-[A-Za-z0-9]{20}|AIza[0-9A-Za-z_-]{30}|-----BEGIN [A-Z ]*PRIVATE KEY)'
+SECRET_RE+='|((api[_-]?key|token|secret|password)["'"'"' ]*[:=] *["'"'"'][A-Za-z0-9_/+=-]{16,})'
+if HITS=$(grep -rnIiE "$SECRET_RE" "$DOTS"); then
+  echo "❌ Possible secrets found in the snapshot, remove them before committing:" >&2
+  echo "$HITS" | cut -c1-200 >&2
+  exit 1
+fi
 
 echo "✅ Snapshot written to $DOTS"

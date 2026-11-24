@@ -40,7 +40,7 @@ install_dot "$DOTS/local/lib/qt6/qml/QtQuick/Controls/FluentWinUI3" \
 echo "🖼️  Installing wallpapers..."
 mkdir -p "$HOME/Pictures/Wallpapers"
 for w in "$DOTS"/wallpapers/*; do
-  [ -e "$w" ] && cp -n "$w" "$HOME/Pictures/Wallpapers/"
+  [ -e "$w" ] && cp --update=none "$w" "$HOME/Pictures/Wallpapers/"
 done
 
 # zsh: terminal colours follow the wallpaper
