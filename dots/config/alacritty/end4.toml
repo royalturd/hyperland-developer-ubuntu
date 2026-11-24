@@ -1,0 +1,36 @@
+# end-4 / illogical-impulse pink Material You palette
+[colors.primary]
+background = "#1D1011"
+foreground = "#F7DCDE"
+
+[colors.cursor]
+text = "#1D1011"
+cursor = "#FFB2BC"
+
+[colors.selection]
+text = "#561D29"
+background = "#FFB2BC"
+
+[colors.search.matches]
+foreground = "#1D1011"
+background = "#E8BE91"
+
+[colors.normal]
+black = "#2A1D1F"
+red = "#E8828E"
+green = "#A9D19B"
+yellow = "#E8BE91"
+blue = "#A9C7FF"
+magenta = "#E5A3D8"
+cyan = "#9ED2D0"
+white = "#D8C1C3"
+
+[colors.bright]
+black = "#524345"
+red = "#FFB2BC"
+green = "#C3EBB4"
+yellow = "#F6D7A9"
+blue = "#C6D9FF"
+magenta = "#F7C4EC"
+cyan = "#BBEEEC"
+white = "#F7DCDE"

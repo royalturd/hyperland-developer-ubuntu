@@ -1,8 +1,9 @@
 #!/bin/bash
 set -e
-echo "🔧 Starting full Hyperland setup on Ubuntu..."
+cd "$(dirname "$0")"
+echo "🔧 Starting full Hyprland setup on Ubuntu..."
 for script in scripts/*.sh; do
   echo "🚀 Running $script"
   bash "$script"
 done
-echo "✅ Installation completed successfully! Reboot the system and select 'Hyperland' na tela de login."
+echo "✅ Installation completed successfully! Log out and select 'Hyprland' on the login screen."

@@ -1,0 +1,2 @@
+module QtQuick.Controls.FluentWinUI3
+import QtQuick.Controls.Basic auto

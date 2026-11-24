@@ -1,65 +1,61 @@
 # 🌀 Hyprland Ubuntu Setup
 
-Setup scripts that install and configure a **Hyprland** environment on **Ubuntu 26.04+**, using the `hyprland` package from the Ubuntu archive.
+Scripts that rebuild my **Hyprland** desktop on **Ubuntu 26.04+**: Hyprland from the Ubuntu archive plus an Ubuntu port of [end-4's illogical-impulse](https://github.com/end-4/dots-hyprland) shell running on Quickshell. The configuration in `dots/` is a snapshot of the live system, so a fresh install looks and behaves the same.
 
 ---
 
-## 📦 What’s Included
+## 📦 What gets installed
 
-### 🔧 Core Setup
+| Script | What it does |
+| --- | --- |
+| `scripts/01-dependencies.sh` | apt packages: Wayland tools, apps used by the keybinds, fonts, Quickshell build dependencies and the QML modules the shell needs |
+| `scripts/02-hyperland.sh` | `hyprland`, `xdg-desktop-portal-hyprland`, `hyprland-qtutils`, `hyprpolkitagent`, `hyprlock`, `hypridle`, `hyprpicker` |
+| `scripts/03-quickshell.sh` | Builds Quickshell at revision `7511545` into `~/.local` (skipped if already installed) |
+| `scripts/04-tools.sh` | matugen 4.1.0, hyprshot, the shell's Python venv (`~/.local/state/quickshell/.venv` via uv), Material Symbols / Google Sans Flex / Rubik / Readex Pro / Space Grotesk / JetBrainsMono Nerd fonts, Bibata cursor, adw-gtk3 theme, Firefox Nightly (Mozilla apt repo), `video`/`i2c`/`input` groups |
+| `scripts/05-dotfiles.sh` | Copies `dots/` into `~/.config`, `~/.local` and `~/Pictures/Wallpapers`, hooks terminal colours into `~/.zshrc`, applies GTK settings. Existing files are backed up to `~/.config-backup-hyprland-<date>` |
+| `scripts/06-post-setup.sh` | Final notes |
 
-- Installs **Hyprland**, `xdg-desktop-portal-hyprland` and `hyprland-qtutils` (Hyprland GUI dialogs) from apt
-- Installs Hypr ecosystem tools: `hyprpolkitagent` (auth prompts), `hyprpaper` (wallpaper), `hyprlock` (lock screen), `hypridle` (idle daemon)
-- Autostarts `hyprpolkitagent`, `hyprpaper`, `hypridle`, `waybar`, `dunst`, `nm-applet` and the `cliphist` clipboard watcher via `~/.config/hypr/autostart.conf` (sourced from `hyprland.conf`)
-- Writes `hyprpaper.conf` (current GNOME wallpaper), `hyprlock.conf` and `hypridle.conf` (lock at 5 min, screen off at 5.5 min, suspend at 30 min) if they don't exist yet
-- Points the stock config at installed apps: `alacritty` (terminal), `nautilus` (file manager), `wofi` (launcher)
-- Login session comes from the package: pick **Hyprland** at the login screen
-- Copies the default config to `~/.config/hypr/hyprland.conf` if you don't have one yet
-- Installs base tools: `waybar`, `wofi`, `alacritty`, `dunst`, `swaybg`, `wl-clipboard`, `xwayland`, Qt Wayland support, `grim` + `slurp` (screenshots), `cliphist` (clipboard history), `brightnessctl` + `playerctl` (media keys), `pavucontrol`, `nm-applet`
+### 🗂️ Config in `dots/`
 
-### ⌨️ Keybinds
+`hypr`, `quickshell/ii`, `illogical-impulse` (shell settings), `fish`, `fuzzel`, `kitty`, `foot`, `alacritty`, `btop`, `cava`, `matugen`, `wlogout`, `xdg-desktop-portal`, `fontconfig`, `kde-material-you-colors`, `Kvantum`, `zshrc.d`, `gtk-3.0`, `gtk-4.0`, `starship.toml`, `kdeglobals`, the generated wallpaper colours, and the desktop and lock-screen wallpapers.
+
+Personal changes on top of end-4 live in `dots/config/hypr/custom/` (keybinds, animations, env).
+
+### ⌨️ Personal keybinds
 
 | Keys | Action |
 | --- | --- |
 | `SUPER+Q` | Terminal (alacritty) |
-| `SUPER+R` | App launcher (wofi) |
-| `SUPER+E` | File manager (nautilus) |
-| `SUPER+C` | Close window |
-| `SUPER+M` | Exit Hyprland |
-| `SUPER+V` | Toggle floating |
-| `SUPER+F` | Fullscreen |
-| `SUPER+L` | Lock screen |
-| `SUPER+arrows` | Move focus |
-| `SUPER+SHIFT+arrows` | Move window |
-| `SUPER+1..0` | Switch workspace |
-| `SUPER+SHIFT+1..0` | Move window to workspace |
-| `SUPER+S` / `SUPER+SHIFT+S` | Scratchpad / move window to scratchpad |
+| `SUPER+X` / `SUPER+C` | Close window |
+| `SUPER+R` | Search / app launcher (Quickshell) |
+| `SUPER+1` | Rofi app launcher |
+| `SUPER+W` | Firefox Nightly |
+| `SUPER+E` | Nautilus |
 | `SUPER+SHIFT+V` | Clipboard history |
-| `Print` / `SHIFT+Print` | Screenshot region / full screen to clipboard |
-| `SUPER+drag` (left/right mouse) | Move / resize window |
-| Media, volume, brightness keys | Work out of the box |
+| `CTRL+SUPER+T` | Wallpaper selector |
+| `CTRL+SUPER+/` | Edit shell config |
 
----
-
-### 🎨 Theming and UI
-
-Writes GTK3 and GTK4 `settings.ini` with the same look as the existing GNOME setup:
-
-- **GTK Theme:** material-gnome-theme (dark)
-- **Icon Pack:** Yaru-prussiangreen-dark
-- **Font:** Ubuntu Nerd Font 11
-- **Cursor:** DMZ-Black, size 24
-
-These must already be installed; the scripts do not install them.
+Everything else follows end-4's defaults; press `SUPER+/` for the cheatsheet.
 
 ---
 
 ## 🚀 How to Use
 
-### 📥 One-liner Install (Recommended)
-
-You can install everything with a single terminal command:
+### 📥 One-liner Install
 
 ```bash
-wget -qO- https://raw.githubusercontent.com/grassiricardo/hyperland-developer-ubuntu/main/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/royalturd/hyperland-developer-ubuntu/main/install.sh | bash
 ```
+
+Or clone the repo and run `./setup.sh`. Then log out and pick **Hyprland** on the login screen.
+
+### 🔄 Updating the snapshot
+
+After changing your setup, capture it again and commit:
+
+```bash
+./snapshot.sh
+git add dots && git commit -s -m "chore: refresh dotfiles snapshot"
+```
+
+`snapshot.sh` stores your home path as `@HOME@`; `05-dotfiles.sh` puts the real one back.

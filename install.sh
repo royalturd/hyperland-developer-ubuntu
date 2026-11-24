@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-REPO_URL="https://github.com/grassiricardo/hyperland-developer-ubuntu.git"
+REPO_URL="https://github.com/royalturd/hyperland-developer-ubuntu.git"
 DIR="hyperland-developer-ubuntu"
 
 if [ -d "$DIR/.git" ]; then
